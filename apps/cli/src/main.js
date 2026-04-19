@@ -23,6 +23,7 @@ import { scaffold } from "./scaffold.js";
 import { validateProjectName, safeTargetPath } from "./validate.js";
 import { applyFeatures } from "./features.js";
 import { runInstall, writeMetadata } from "./install.js";
+import { generateExtras } from "./generate.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -165,6 +166,9 @@ async function main(args) {
       target,
       vars: { PROJECT_NAME: opts.name, DB: opts.db || "none" },
     });
+
+    // Generate stack-specific code (db connection, ORM, models, .env.example).
+    generateExtras(target, opts);
 
     // Addons that actually execute: docker, readme (handled by features.js).
     // Git init is controlled by the dedicated --no-git flag.
