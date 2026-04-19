@@ -338,6 +338,7 @@ function nextStepsFor(template, opts) {
     case "python-django":    return [...pythonInstallSteps(opts?.pm), "python manage.py runserver"];
     case "js-express":       return [nodeInstall, nodeDev];
     case "ts-hono":          return [nodeInstall, nodeDev];
+    case "ts-elysia":        return ["bun install", "bun run dev"];
     case "ts-nextjs":        return [nodeInstall, nodeDev];
     case "php-slim":         return ["composer install", "php -S localhost:8000 -t public"];
     case "go-gin":           return ["go mod tidy", "go run ."];
@@ -379,7 +380,7 @@ ${kleur.bold("Usage:")}
 
 ${kleur.bold("Core:")}
   --lang            java | python | javascript | typescript | php | go | rust | ruby | csharp | kotlin
-  --framework       spring-boot | fastapi | django | express | hono | nextjs | slim | gin | axum | sinatra | aspnet | ktor
+  --framework       spring-boot | fastapi | django | express | hono | elysia | nextjs | slim | gin | axum | sinatra | aspnet | ktor
                     (this is the ${kleur.bold("backend")} framework)
   --web-frontend    nextjs | react-vite | react-router | tanstack-start | nuxt | sveltekit | solid-start | astro | none
   --native-frontend react-native-expo | react-native-nativewind | react-native-unistyles | flutter | swift-ui | kotlin-compose | lynx | none

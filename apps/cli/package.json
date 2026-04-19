@@ -1,6 +1,6 @@
 {
   "name": "create-polystack",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Scaffold polyglot projects (Java, Python, JS, TS, PHP) from Polystack templates.",
   "keywords": [
     "scaffold",

@@ -14,6 +14,7 @@ export const LANGUAGES = [
   ]},
   { id: "typescript", name: "TypeScript", color: "#60a5fa", description: "Typed superset of JavaScript", frameworks: [
     { id: "hono", name: "Hono", template: "ts-hono", description: "Ultrafast edge-ready web framework" },
+    { id: "elysia", name: "Elysia", template: "ts-elysia", description: "Bun-native TypeScript framework with end-to-end type safety" },
     { id: "nextjs", name: "Next.js", template: "ts-nextjs", description: "React framework for the modern web" },
   ]},
   { id: "php", name: "PHP", color: "#a78bfa", description: "Dynamic language powering much of the web", frameworks: [

@@ -18,6 +18,8 @@ export function resolveInstallCommand(template, pm) {
       const cmd = JS_PM[choice] || JS_PM.npm;
       return { cmd: cmd[0], args: cmd[1] || [] };
     }
+    case "ts-elysia":
+      return { cmd: "bun", args: ["install"] };
     case "python-fastapi":
     case "python-django": {
       const choice = pm && pm !== "auto" ? pm : "pip";
@@ -70,6 +72,7 @@ export function installArtifact(template) {
   switch (template) {
     case "js-express":
     case "ts-hono":
+    case "ts-elysia":
     case "ts-nextjs":
       return "node_modules";
     case "go-gin":
