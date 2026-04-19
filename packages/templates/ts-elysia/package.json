@@ -9,7 +9,5 @@
   "dependencies": {
     "elysia": "^1.2.0"
   },
-  "devDependencies": {
-    "bun-types": "^1.1.0"
-  }
+  "devDependencies": {}
 }
