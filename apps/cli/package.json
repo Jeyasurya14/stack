@@ -1,8 +1,17 @@
 {
   "name": "create-polystack",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Scaffold polyglot projects (Java, Python, JS, TS, PHP) from Polystack templates.",
-  "keywords": ["scaffold", "cli", "starter", "polyglot", "java", "python", "typescript", "php"],
+  "keywords": [
+    "scaffold",
+    "cli",
+    "starter",
+    "polyglot",
+    "java",
+    "python",
+    "typescript",
+    "php"
+  ],
   "license": "MIT",
   "type": "module",
   "bin": {
