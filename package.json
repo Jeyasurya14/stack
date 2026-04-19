@@ -1,0 +1,21 @@
+{
+  "name": "polystack",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Polystack — a polyglot stack builder (Java, Python, JS, TS, PHP). Pick your stack, copy the command, scaffold instantly.",
+  "scripts": {
+    "web": "pnpm --filter @polystack/web dev",
+    "cli": "pnpm --filter create-polystack start",
+    "test": "pnpm -r run test",
+    "build:web": "pnpm --filter @polystack/web build",
+    "lint:format": "prettier --check \"**/*.{js,ts,tsx,json,md,css}\" --ignore-path .gitignore",
+    "format": "prettier --write \"**/*.{js,ts,tsx,json,md,css}\" --ignore-path .gitignore"
+  },
+  "devDependencies": {
+    "prettier": "^3.3.3"
+  },
+  "packageManager": "pnpm@9.0.0",
+  "engines": {
+    "node": ">=18"
+  }
+}
