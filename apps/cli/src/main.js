@@ -18,7 +18,7 @@ import {
   PACKAGE_MANAGERS,
   ADDONS,
   findTemplate,
-} from "@polystack/core/stacks";
+} from "./_vendor/stacks.js";
 import { scaffold } from "./scaffold.js";
 import { validateProjectName, safeTargetPath } from "./validate.js";
 import { applyFeatures } from "./features.js";

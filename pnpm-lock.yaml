@@ -17,9 +17,6 @@ importers:
       '@clack/prompts':
         specifier: ^0.7.0
         version: 0.7.0
-      '@polystack/core':
-        specifier: workspace:*
-        version: link:../../packages/core
       kleur:
         specifier: ^4.1.5
         version: 4.1.5
@@ -27,6 +24,9 @@ importers:
         specifier: ^1.2.0
         version: 1.2.0
     devDependencies:
+      '@polystack/core':
+        specifier: workspace:*
+        version: link:../../packages/core
       vitest:
         specifier: ^1.6.0
         version: 1.6.1(@types/node@20.19.39)
