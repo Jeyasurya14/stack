@@ -22,7 +22,9 @@ async function copyDir(src, dst, vars, rootSrc) {
   for (const entry of fs.readdirSync(src, { withFileTypes: true })) {
     // npm/pnpm strips real `.gitignore` from published packages;
     // templates ship `_gitignore` and we restore the dot-name on scaffold.
-    const outName = entry.name === "_gitignore" ? ".gitignore" : entry.name;
+    // Also rewrite {{PLACEHOLDER}} in filenames (e.g. `{{PROJECT_NAME}}.csproj`).
+    const renamed = entry.name === "_gitignore" ? ".gitignore" : entry.name;
+    const outName = applyVars(renamed, vars);
     const s = path.join(src, entry.name);
     const d = path.join(dst, outName);
 

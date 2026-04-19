@@ -40,27 +40,67 @@ describe("stacks registry", () => {
 });
 
 describe("buildCommand", () => {
-  it("emits a clean npx command", () => {
+  it("emits core flags and addons", () => {
     expect(
       buildCommand({
         name: "my-app",
         lang: "python",
         framework: "fastapi",
         db: "postgres",
-        features: ["docker", "git"],
+        addons: ["docker", "readme"],
       })
     ).toBe(
-      "npx create-polystack@latest my-app --lang python --framework fastapi --db postgres --features docker,git"
+      "npx create-polystack@latest my-app --lang python --framework fastapi --db postgres --addons docker,readme"
     );
   });
 
-  it("omits db when none", () => {
+  it("emits integration flags when non-default", () => {
+    const cmd = buildCommand({
+      name: "shop",
+      lang: "typescript",
+      framework: "nextjs",
+      db: "postgres",
+      orm: "drizzle",
+      dbSetup: "neon",
+      auth: "clerk",
+      payments: "stripe",
+      webDeploy: "vercel",
+      serverDeploy: "fly",
+      pm: "pnpm",
+    });
+    expect(cmd).toContain("--orm drizzle");
+    expect(cmd).toContain("--db-setup neon");
+    expect(cmd).toContain("--auth clerk");
+    expect(cmd).toContain("--payments stripe");
+    expect(cmd).toContain("--web-deploy vercel");
+    expect(cmd).toContain("--server-deploy fly");
+    expect(cmd).toContain("--pm pnpm");
+  });
+
+  it("emits --no-git and --no-install when opted out", () => {
     const cmd = buildCommand({
       name: "x",
-      lang: "java",
-      framework: "spring-boot",
-      db: "none",
+      lang: "go",
+      framework: "gin",
+      git: "none",
+      install: "skip",
     });
+    expect(cmd).toContain("--no-git");
+    expect(cmd).toContain("--no-install");
+  });
+
+  it("omits db when none", () => {
+    const cmd = buildCommand({ name: "x", lang: "java", framework: "spring-boot", db: "none" });
     expect(cmd).not.toContain("--db");
+  });
+
+  it("still accepts legacy `features` as addons alias", () => {
+    const cmd = buildCommand({
+      name: "x",
+      lang: "python",
+      framework: "fastapi",
+      features: ["docker"],
+    });
+    expect(cmd).toContain("--addons docker");
   });
 });

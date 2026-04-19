@@ -11,7 +11,7 @@ import { execFileSync } from "node:child_process";
 export function applyFeatures({ target, template, features, projectName }) {
   const set = new Set(features || []);
   if (set.has("readme")) ensureReadme(target, projectName, template);
-  if (set.has("docker")) writeDocker(target, template);
+  if (set.has("docker")) writeDocker(target, template, projectName);
   if (set.has("git")) gitInit(target, projectName);
 }
 
@@ -24,8 +24,8 @@ function ensureReadme(target, name, template) {
   );
 }
 
-function writeDocker(target, template) {
-  const dockerfile = dockerfileFor(template);
+function writeDocker(target, template, projectName) {
+  const dockerfile = dockerfileFor(template, projectName);
   if (!dockerfile) return;
   fs.writeFileSync(path.join(target, "Dockerfile"), dockerfile);
   fs.writeFileSync(
@@ -34,7 +34,7 @@ function writeDocker(target, template) {
   );
 }
 
-function dockerfileFor(template) {
+function dockerfileFor(template, projectName) {
   switch (template) {
     case "java-spring-boot":
       return `# Multi-stage build for Spring Boot
@@ -108,6 +108,66 @@ ENV NODE_ENV=production
 COPY --from=build /app ./
 EXPOSE 3000
 CMD ["npm", "start"]
+`;
+    case "go-gin":
+      return `FROM golang:1.22-alpine AS build
+WORKDIR /app
+COPY go.mod ./
+RUN go mod download || true
+COPY . .
+RUN CGO_ENABLED=0 go build -o /out/app .
+
+FROM alpine:3.20
+WORKDIR /app
+COPY --from=build /out/app /app/app
+EXPOSE 8080
+ENTRYPOINT ["/app/app"]
+`;
+    case "rust-axum":
+      return `FROM rust:1.80 AS build
+WORKDIR /app
+COPY . .
+RUN cargo build --release
+
+FROM debian:bookworm-slim
+WORKDIR /app
+COPY --from=build /app/target/release/${projectName} /app/app
+EXPOSE 3000
+CMD ["/app/app"]
+`;
+    case "ruby-sinatra":
+      return `FROM ruby:3.2-alpine
+WORKDIR /app
+COPY Gemfile ./
+RUN apk add --no-cache build-base && bundle install
+COPY . .
+EXPOSE 9292
+CMD ["bundle", "exec", "rackup", "-o", "0.0.0.0"]
+`;
+    case "csharp-aspnet":
+      return `FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+COPY . .
+RUN dotnet publish -c Release -o /app
+
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
+WORKDIR /app
+COPY --from=build /app .
+EXPOSE 5000
+ENV ASPNETCORE_URLS=http://0.0.0.0:5000
+ENTRYPOINT ["dotnet", "app.dll"]
+`;
+    case "kotlin-ktor":
+      return `FROM gradle:8.8-jdk17 AS build
+WORKDIR /app
+COPY . .
+RUN gradle installDist --no-daemon
+
+FROM eclipse-temurin:17-jre
+WORKDIR /app
+COPY --from=build /app/build/install /app
+EXPOSE 8080
+CMD ["./${projectName}/bin/${projectName}"]
 `;
     case "php-slim":
       return `FROM php:8.3-cli-alpine
