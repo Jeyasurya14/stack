@@ -16,27 +16,31 @@ jobs:
         node: [18, 20, 22]
     steps:
       - uses: actions/checkout@v4
+
+      # Let pnpm/action-setup read the version from `packageManager` in package.json
       - uses: pnpm/action-setup@v4
-        with:
-          version: 9.12.0
+
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
           cache: pnpm
+
       - run: pnpm install --frozen-lockfile
+
       - run: pnpm test
+
+      # Cross-platform smoke test: scaffold a project and verify a key file exists.
       - name: Smoke scaffold (FastAPI)
+        shell: bash
         run: |
           node apps/cli/bin/index.js smoke-api --lang python --framework fastapi --db postgres --yes
-          test -f smoke-api/app/main.py
+          node -e "require('fs').accessSync('smoke-api/app/main.py'); console.log('OK')"
 
   build-web:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
-        with:
-          version: 9.12.0
       - uses: actions/setup-node@v4
         with:
           node-version: 20
